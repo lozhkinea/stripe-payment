@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <title>Buy {{item.name}}</title>
+  </head>
+  <body>
+    <table>
+      <tr><td> Name: </td><td>{{item.name}}</td>
+      <tr><td> Description: </td><td>{{item.description}}</td>
+      <tr><td> Price: </td><td>{{item.price}}</td>
+    </table>
+    <form action="{% url 'orders:buy' item.id %}" method="GET">
+      <button type="submit">Buy</button>
+    </form>
+  </body>
+</html>
