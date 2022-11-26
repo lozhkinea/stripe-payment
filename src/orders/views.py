@@ -1,7 +1,8 @@
 from os import getenv
 
 import stripe
-from django.shortcuts import get_object_or_404, redirect, render
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views import View
 
@@ -35,7 +36,7 @@ class BuyAPIView(View):
                 }
             ],
         )
-        return redirect(session.url)
+        return JsonResponse({'session_id': session.id})
 
 
 class ItemAPIView(View):

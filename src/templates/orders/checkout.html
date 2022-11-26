@@ -1,17 +1,28 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html>
   <head>
-    <meta charset="utf-8">
-    <title>Buy {{item.name}}</title>
+    <title>Buy of {{item.name}}</title>
+    <script src="https://js.stripe.com/v3/"></script>
   </head>
   <body>
-    <table>
-      <tr><td> Name: </td><td>{{item.name}}</td>
-      <tr><td> Description: </td><td>{{item.description}}</td>
-      <tr><td> Price: </td><td>{{item.price}}</td>
-    </table>
-    <form action="{% url 'orders:buy' item.id %}" method="GET">
-      <button type="submit">Buy</button>
-    </form>
+    <h1>{{item.name}}</h1>
+    <p>{{item.description}}</p>
+    <p>{{item.price}}</p>
+    <button id="buy-button">Buy</button>
+    <script type="text/javascript">
+      var stripe = Stripe('pk_test_51M7NGBAwVud8SKg49gXUMaAOMUPrD7bwS8e5jBoli7M6vvQvCMPgLvGbXlHOLgmkWzaw7nyY8GalTIQmlAyn5Sn400OwCn30WT');
+      var buyButton = document.getElementById('buy-button');
+      buyButton.addEventListener('click', function() {
+        // Create a new Checkout Session using the server-side endpoint 
+        // Redirect to Stripe Session Checkout
+        fetch('{% url 'orders:buy' item.id %}', {method: 'GET'})
+        .then(function(response) {
+          return response.json();
+        })
+        .then(function(answer) {
+          return stripe.redirectToCheckout({ sessionId: answer.session_id });
+        })
+      });
+    </script>
   </body>
 </html>
