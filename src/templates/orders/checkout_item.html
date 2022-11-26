@@ -10,7 +10,7 @@
     <p>{{item.price}}</p>
     <button id="buy-button">Buy</button>
     <script type="text/javascript">
-      var stripe = Stripe('pk_test_51M7NGBAwVud8SKg49gXUMaAOMUPrD7bwS8e5jBoli7M6vvQvCMPgLvGbXlHOLgmkWzaw7nyY8GalTIQmlAyn5Sn400OwCn30WT');
+      var stripe = Stripe('{{pkey}}');
       var buyButton = document.getElementById('buy-button');
       buyButton.addEventListener('click', function() {
         // Create a new Checkout Session using the server-side endpoint 
