@@ -23,9 +23,11 @@ class Item(models.Model):
 
 
 class Order(models.Model):
-    # description = models.TextField('Описание', max_length=2000, blank=True, null=True)
     items = models.ManyToManyField(
         Item, through='OrderItem', verbose_name='Товары'
+    )
+    discount = models.ForeignKey(
+        'Discount', verbose_name='Скидка', on_delete=models.CASCADE, null=True
     )
 
     class Meta:
@@ -59,3 +61,38 @@ class OrderItem(models.Model):
                 name='unique_order_items)',
             ),
         ]
+
+    def __str__(self):
+        return f'{self.item} из {self.order}'
+
+
+class Discount(models.Model):
+    coupon_id = models.CharField(
+        'Купон',
+        max_length=200,
+        blank=True,
+        null=True,
+        editable=False,
+        help_text='Поле генерируется Stripe',
+    )
+    percent_off = models.DecimalField(
+        'Скидка в процентах',
+        max_digits=5,
+        decimal_places=2,
+        validators=[MinValueValidator(0)],
+    )
+    duration = models.CharField(
+        'Срок действия',
+        max_length=11,
+        choices=(
+            ('forever', 'Постоянно'),
+            ('once', 'Однократно'),
+        ),
+    )
+
+    class Meta:
+        verbose_name = 'Скидка'
+        verbose_name_plural = 'Скидки'
+
+    def __str__(self):
+        return f'Купон {self.coupon_id} на {self.percent_off} %'

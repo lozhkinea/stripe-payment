@@ -5,7 +5,7 @@
     <script src="https://js.stripe.com/v3/"></script>
   </head>
   <body>
-    {% for order_item in order_items %}
+    {% for order_item in order.order_items.all %}
       <h1>{{order_item.item.name}}</h1>
       <p>{{order_item.item.description}}</p>
       <p>{{order_item.item.price}} × {{order_item.amount}} шт.</p>
