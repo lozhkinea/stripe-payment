@@ -1,37 +1,38 @@
+from django.conf import settings
 from django.http import JsonResponse
 from django.shortcuts import render
 from django.views import View
 
-import orders.services as svc
+from orders import services
 
 
 class BuyAPIView(View):
     def get(self, request, id):
-        session = svc.create_checkout_session_for_item(id)
-        return JsonResponse({'session_id': session.id})
+        session_id = services.get_checkout_session_id_for_item(id)
+        return JsonResponse(session_id)
 
 
 class BuyOrderAPIView(View):
     def get(self, request, id):
-        session = svc.create_checkout_session_for_order(id)
-        return JsonResponse({'session_id': session.id})
+        session_id = services.get_checkout_session_id_for_order(id)
+        return JsonResponse(session_id)
 
 
 class ItemAPIView(View):
     def get(self, request, id):
-        template = 'orders/checkout_item.html'
+        template = 'orders/checkout.html'
         context = {
-            'item': svc.get_item(id),
-            'pkey': svc.STRIPE_PUBLIC_KEY,
+            'item': services.get_item(id),
+            'STRIPE_PUBLISHABLE_KEY': settings.STRIPE_PUBLISHABLE_KEY,
         }
         return render(request, template, context)
 
 
 class OrderAPIView(View):
     def get(self, request, id):
-        template = 'orders/checkout_order.html'
+        template = 'orders/checkout.html'
         context = {
-            'order': svc.get_order(id),
-            'pkey': svc.STRIPE_PUBLIC_KEY,
+            'order': services.get_order(id),
+            'STRIPE_PUBLISHABLE_KEY': settings.STRIPE_PUBLISHABLE_KEY,
         }
         return render(request, template, context)

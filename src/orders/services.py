@@ -1,14 +1,11 @@
-import os
-
 import stripe
+from django.conf import settings
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 
 from orders.models import Item, Order
 
-HOST = 'http://localhost:8000'
-STRIPE_PUBLIC_KEY = os.getenv('STRIPE_PUBLIC_KEY')
-stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 def get_price_data(item, amount):
@@ -27,36 +24,44 @@ def get_price_data(item, amount):
     }
 
 
-def create_checkout_session_for_item(id):
-    """Создает Session в Stripe для Item."""
-    item = get_object_or_404(Item, id=id)
-    url = HOST + reverse('orders:item', kwargs={'id': id})
-    return stripe.checkout.Session.create(
-        cancel_url=url,
-        mode='payment',
-        success_url=url,
-        line_items=[get_price_data(item, 1)],
-    )
+def get_checkout_session_id_for_item(id):
+    """Создает Session в Stripe для Item и возвращает id."""
+    item = get_item(id)
+    url = settings.DOMAIN_URL + reverse('orders:item', kwargs={'id': id})
+    try:
+        session = stripe.checkout.Session.create(
+            cancel_url=url,
+            mode='payment',
+            success_url=url,
+            line_items=[get_price_data(item, 1)],
+        )
+        return {'session_id': session.id}
+    except Exception as e:
+        return {'error': str(e)}
 
 
-def create_checkout_session_for_order(id):
-    """Создает Session в Stripe для Order."""
-    order = get_object_or_404(Order, id=id)
-    url = HOST + reverse('orders:order', kwargs={'id': id})
-    return stripe.checkout.Session.create(
-        cancel_url=url,
-        mode='payment',
-        success_url=url,
-        line_items=[
-            get_price_data(order_item.item, order_item.amount)
-            for order_item in order.order_items.all()
-        ],
-        discounts=[
-            {
-                'coupon': order.discount.coupon,
-            }
-        ],
-    )
+def get_checkout_session_id_for_order(id):
+    """Создает Session в Stripe для Order и возвращает id."""
+    order = get_order(id)
+    items = order.order_items.all()
+    url = settings.DOMAIN_URL + reverse('orders:order', kwargs={'id': id})
+    try:
+        session = stripe.checkout.Session.create(
+            cancel_url=url,
+            mode='payment',
+            success_url=url,
+            line_items=[
+                get_price_data(item.item, item.amount) for item in items
+            ],
+            discounts=[
+                {
+                    'coupon': order.discount.coupon_id,
+                }
+            ],
+        )
+        return {'session_id': session.id}
+    except Exception as e:
+        return {'error': str(e)}
 
 
 def get_item(id):

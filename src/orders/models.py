@@ -27,7 +27,11 @@ class Order(models.Model):
         Item, through='OrderItem', verbose_name='Товары'
     )
     discount = models.ForeignKey(
-        'Discount', verbose_name='Скидка', on_delete=models.CASCADE, null=True
+        'Discount',
+        verbose_name='Скидка',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
     )
 
     class Meta:

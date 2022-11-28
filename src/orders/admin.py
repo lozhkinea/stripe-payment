@@ -1,7 +1,10 @@
 import stripe
+from django.conf import settings
 from django.contrib import admin
 
 from orders.models import Discount, Item, Order, OrderItem
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 class ItemAdmin(admin.ModelAdmin):

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Buy of product(s)</title>
+    <script src="https://js.stripe.com/v3/"></script>
+  </head>
+  <body>
+    {% comment %} Вывод одного Item {% endcomment %}
+    {%if item %}
+      <h1>{{item.name}}</h1>
+      <p>{{item.description}}</p>
+      <p>{{item.price}}</p>
+    {% endif %}
+
+    {% comment %} Вывод всех Item из Order {% endcomment %}
+    {%if order %}
+      {% for order_item in order.order_items.all %}
+        <h1>{{order_item.item.name}}</h1>
+        <p>{{order_item.item.description}}</p>
+        <p>{{order_item.item.price}} × {{order_item.amount}} шт.</p>
+        {% if not forloop.last %}<br>{% endif %}
+      {% endfor %}
+    {% endif %}
+    
+    <button id="buy-button">Buy</button>
+    <script type="text/javascript">
+      var stripe = Stripe('{{STRIPE_PUBLISHABLE_KEY}}');
+      var buyButton = document.getElementById('buy-button');
+      buyButton.addEventListener('click', function() {
+        // Create a new Checkout Session using the server-side endpoint 
+        // Redirect to Stripe Session Checkout
+        fetch('{%if order %}{% url 'orders:buy_order' order.id %}{% endif %}{%if item %}{% url 'orders:buy' item.id %}{% endif %}', {method: 'GET'})
+        .then(function(response) {
+          return response.json();
+        })
+        .then(function(answer) {
+          return stripe.redirectToCheckout({ sessionId: answer.session_id });
+        })
+      });
+    </script>
+  </body>
+</html>

@@ -1,5 +1,4 @@
-from os import getenv
-
+import os
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -8,14 +7,12 @@ load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = getenv('DJANGO_SECRET_KEY')
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
-DEBUG = True
+DEBUG = bool(int(os.getenv('DEBUG', '0')))
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
-
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -59,19 +56,17 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.postgresql'),
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('POSTGRES_USER'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
     }
 }
 
-
-# Password validation
-# https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -89,9 +84,6 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# Internationalization
-# https://docs.djangoproject.com/en/4.1/topics/i18n/
-
 LANGUAGE_CODE = 'ru-ru'
 
 TIME_ZONE = 'UTC'
@@ -101,12 +93,14 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.1/howto/static-files/
-
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'static'
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CSRF_TRUSTED_ORIGINS = ['http://localhost']
+
+STRIPE_PUBLISHABLE_KEY = os.getenv('STRIPE_PUBLISHABLE_KEY')
+STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
+DOMAIN_URL = os.getenv('DOMAIN_URL')
