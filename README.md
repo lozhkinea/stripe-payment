@@ -62,7 +62,7 @@ git clone git@github.com:lozhkinea/stripe-payment.git
 
 В учетной записи Stripe получить ключи для API.
 В файле src/.env задать переменные окружения (пример в .env_example).
-В файле src/config/settings.py указать в CSRF_TRUSTED_ORIGINS <АДРЕС_СЕРВЕРА>}.
+В файле src/config/settings.py указать в CSRF_TRUSTED_ORIGINS АДРЕС_СЕРВЕРА.
 Запустить проект:
 ```bash
 cd stripe-payment
@@ -81,16 +81,16 @@ docker-compose exec web python manage.py createsuperuser
 
 Перйти в браузере для заполнения базы данных:
 ```bash
-http://<АДРЕС_СЕРВЕРА>}/admin/
+http://АДРЕС_СЕРВЕРА/admin/
 
 ```
 
 Перейти в браузере для оплаты товара 1:
 ```bash
-http://<АДРЕС_СЕРВЕРА>/item/1/
+http://АДРЕС_СЕРВЕРА/item/1/
 
 ```
 
 Перейти в браузере для оплаты заказа 1:
 ```bash
-http://<АДРЕС_СЕРВЕРА>/order/1/
+http://АДРЕС_СЕРВЕРА/order/1/
