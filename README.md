@@ -5,8 +5,12 @@
 
 Клонировать репозиторий:
 ```bash
-git clone git@github.com:lozhkinea/stripe-payment.git
+git clone https://github.com/lozhkinea/stripe-payment.git
 ```
+
+В учетной записи Stripe получить ключи для API.
+В файле src/.env задать переменные окружения (пример в .env_example).
+
 Создать и активировать виртуальное окружение:
 ```bash
 cd stripe-payment
@@ -16,7 +20,7 @@ source venv/bin/activate
 
 Установить зависимости из файла requirements.txt:
 ```bash
-pip install -r requirements.txt
+pip install -r src/requirements.txt
 ```
 
 Выполнить миграции:
@@ -29,40 +33,26 @@ python manage.py migrate
 python manage.py createsuperuser
 ```
 
-В учетной записи Stripe получить ключи для API.
-В файле src/.env задать переменные окружения (пример в .env_example).
 Запустить проект:
 ```bash
 python manage.py runserver --insecure 
 ```
 
-Перtйти в браузере для заполнения базы данных:
+Проект будет доступен по адресу:
 ```bash
-http://localhost:8000/admin/
+http://localhost:8000/
 
 ```
 
-Перейти в браузере для оплаты товара 1:
-```bash
-http://localhost:8000/item/1/
-
-```
-
-Перейти в браузере для оплаты заказа 1:
-```bash
-http://localhost:8000/order/1/
-
-```
 ## Запуск на сервере с помощью Docker:
 
 Клонировать репозиторий:
 ```bash
-git clone git@github.com:lozhkinea/stripe-payment.git
+git clone https://github.com/lozhkinea/stripe-payment.git
 ```
 
 В учетной записи Stripe получить ключи для API.
 В файле src/.env задать переменные окружения (пример в .env_example).
-В файле src/config/settings.py указать в CSRF_TRUSTED_ORIGINS АДРЕС_СЕРВЕРА.
 Запустить проект:
 ```bash
 cd stripe-payment
@@ -78,19 +68,20 @@ docker-compose exec web python manage.py migrate
 docker-compose exec web python manage.py createsuperuser
 ```
 
-
-Перйти в браузере для заполнения базы данных:
-```bash
-http://АДРЕС_СЕРВЕРА/admin/
-
-```
+## Проверка работы
 
 Перейти в браузере для оплаты товара 1:
 ```bash
-http://АДРЕС_СЕРВЕРА/item/1/
+http://lea.zapto.org/item/1/
 
 ```
 
 Перейти в браузере для оплаты заказа 1:
 ```bash
-http://АДРЕС_СЕРВЕРА/order/1/
+http://lea.zapto.org/order/1/
+
+Перейти в браузере для заполнения базы данных (admin/admin):
+```bash
+http://lea.zapto.org/admin/
+
+```
