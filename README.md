@@ -58,13 +58,10 @@ git clone https://github.com/lozhkinea/stripe-payment.git
 cd stripe-payment
 docker-compose up
 ```
-Выполнить миграции:
+Выполнить миграции, собрать статику, создать пользователя:
 ```bash
 docker-compose exec web python manage.py migrate
-```
-
-Создать пользователя:
-```bash
+docker-compose exec web python manage.py collectstatic
 docker-compose exec web python manage.py createsuperuser
 ```
 
@@ -79,6 +76,7 @@ http://lea.zapto.org/item/1/
 Перейти в браузере для оплаты заказа 1:
 ```bash
 http://lea.zapto.org/order/1/
+```
 
 Перейти в браузере для заполнения базы данных (admin/admin):
 ```bash
